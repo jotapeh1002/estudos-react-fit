@@ -4,6 +4,7 @@ import { useLayoutEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useRoute } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function ExibirDados() {
     interface Dados {
@@ -13,6 +14,9 @@ export default function ExibirDados() {
     }
 
     const [numberRows, setNumberRows] = useState(5)
+    const [isFavorited, setIsFavorited] = useState(false);
+    // const [numIndex, setnumIndex] = useState(0);
+
 
     const widthD = Dimensions.get('window').width;
 
@@ -42,7 +46,11 @@ export default function ExibirDados() {
                     source={image}
                     style={{ height: 210, resizeMode: 'stretch', marginVertical: 0, borderRadius: 10, marginBottom: 10, width: widthD * 0.95, }}
                 />
-                <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 15, marginTop: 5, marginLeft: 4 }}>Ingredientes</Text>
+                <View style={{ flexDirection: "row", justifyContent: 'space-between', marginRight: 25 }} >
+                    <Text style={{ fontSize: 30, fontWeight: 'bold', marginBottom: 15, marginTop: 5, marginLeft: 4 }}>Ingredientes</Text>
+                    <FontAwesome name={isFavorited ? 'heart' : 'heart-o'} color={'red'} style={{ marginTop: 10, padding: 20, position: 'absolute', right: -12, top: -15 }}
+                        onPress={() => setIsFavorited(isFavorited ? false : true)} size={26} />
+                </View>
                 {ingredientsArray.map((ingredient: string, index: number) => (
                     index < numberRows && (<View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 12, marginRight: 6 }}>
                         <Text style={{ fontSize: 20, marginTop: 4 }}>-</Text>
@@ -51,14 +59,13 @@ export default function ExibirDados() {
                         </Text>
                     </View>)
                 ))}
-                <TouchableOpacity onPress={() => setNumberRows((prevRows) => (prevRows < 10 ? 5000 : 5))}>
-                    <View style={{ marginTop: 14 }}>
+                {ingredientsArray.length >5 && <TouchableOpacity style={{ justifyContent: 'center', alignItems: "center" }} onPress={() => setNumberRows((prevRows) => (prevRows < 10 ? 5000 : 5))}>
+                    <View style={{ marginTop: 10, height: 40, backgroundColor: 'rgba(100,0,255, 0.5)', borderRadius: 20, width: 160, }}>
                         <Text style={{
-                            color: 'white', fontSize: 16.5, top:numberRows<10?-50:0 ,textAlign: 'center', backgroundColor: 'rgba(0,0,255, 0.5)', paddingVertical: 15,
-                             width: '100%', zIndex: 200
+                            fontSize: 16.5, textAlign: 'center', color: 'rgba(255,255,255, 1)', paddingVertical: 8.5, zIndex: 200
                         }}>Ver {numberRows > 9 ? 'Menos' : 'Mais'}</Text>
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
         </ScrollView>
     );
